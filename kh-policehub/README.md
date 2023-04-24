@@ -5,4 +5,4 @@ there is a count beside the panic button shows the count of the officers the set
     <img href="https://khdev.store/" src="https://cdn.discordapp.com/attachments/1045818735484747826/1100154402523861113/POST2.png"/>
 </div>
 
-<h1 align="center">This resource made by khdev store using <a href="https://github.com/project-error/fivem-react-boilerplate-lua">FiveM React and Lua Boilerplate</a></h1>
+<h4 align="center">This resource made by khdev store using <a href="https://github.com/project-error/fivem-react-boilerplate-lua">FiveM React and Lua Boilerplate</a></h4>
