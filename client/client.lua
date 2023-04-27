@@ -1,18 +1,41 @@
 local QBCore = exports['qb-core']:GetCoreObject()
+local menu_opened = false
 
 local function toggleNuiFrame(shouldShow)
   SetNuiFocus(shouldShow, shouldShow)
   SendReactMessage('setVisible', shouldShow)
 end
 
-RegisterCommand('open-list', function()
-  toggleNuiFrame(true)
-  TriggerServerEvent('kh-policehub:get:officers')
+local function toggleNuiFrameNoFocus(shouldShow)
+  SendReactMessage('setVisible', shouldShow)
+end
+
+RegisterCommand('open-list', function(source, args)
+  if args[1] == "0" then
+    if not menu_opened then
+      menu_opened = true
+      toggleNuiFrame(true)
+      TriggerServerEvent('kh-policehub:get:officers')
+    else
+      menu_opened = false
+      toggleNuiFrame(false)
+    end
+  else
+    if not menu_opened then
+      menu_opened = true
+      toggleNuiFrameNoFocus(true)
+      TriggerServerEvent('kh-policehub:get:officers')
+    else
+      menu_opened = false
+      toggleNuiFrameNoFocus(false)
+    end
+  end
 end)
 
 RegisterNUICallback('hideFrame', function(_, cb)
   toggleNuiFrame(false)
   TriggerEvent('kh-policehub:close:all')
+  menu_opened = false
   cb({})
 end)
 
@@ -158,4 +181,17 @@ RegisterNUICallback("Change-Officer-Callsign", function(data, cb)
   local playernewcallsign = data.callsign
   TriggerServerEvent('kh-policehub:officer:change:callsign', playerid, playernewcallsign)
   cb({})
+end)
+
+CreateThread(function()
+  while true do
+    if IsPauseMenuActive() then
+      if menu_opened then
+        toggleNuiFrame(false)
+        TriggerEvent('kh-policehub:close:all')
+        menu_opened = false
+      end
+    end
+    Wait(500)
+  end
 end)
